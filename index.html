@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Marcas - Home</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <header>
+            <div class="top-bar">
+                <p>
+                    <span class="material-symbols-outlined">call</span>
+                    <i>+244 947 342 837</i>
+                </p>
+                <p>
+                    <span class="material-symbols-outlined">mail</span>
+                    <i>suporte@marcas.com</i>
+                </p>
+            </div>
+            <div class="menu-bar">
+                <a href="#" id="logo">
+                    <img src="./assets/logo.png" alt="Logo">
+                </a>
+                <div id="menu">
+                    <ul>
+                        <li class="menu-item active">
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#">Catálogos</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#">Blog</a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="search-bar-bag-and-user-icon">
+                    <div id="search-bar">
+                        <input type="text">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <span class="material-symbols-outlined icon">shopping_bag</span>
+                    <span class="material-symbols-outlined icon">account_circle</span>
+                </div>
+            </div>
+            <div id="banner">
+                <!--  -->
+            </div>
+        </header>
+        <main>
+            <section id="nosso-forte">
+                <h1>Por que Nos Escolher</h1>
+                <div>
+                    <article>
+                        <span class="material-symbols-outlined">percent</span>
+                        <div>
+                            <h3>Grandes Descontos</h3>
+                            <span>Em todas épocas</span>
+                        </div>
+                    </article>
+                    <article>
+                        <span class="material-symbols-outlined">local_shipping</span>
+                        <div>
+                            <h3>Entrega Gratuíta</h3>
+                            <span>Compra de +100k </span>
+                        </div>
+                    </article>
+                    <article>
+                        <span class="material-symbols-outlined">headphones</span>
+                        <div>
+                            <h3>Suporte Pós-Venda</h3>
+                            <span>7/24h</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+            <section id="produtos">
+                <p>O que temos para si!</p>
+                <h1>Nossos Produtos</h1>
+                <div id="lista-produtos">
+                    <!--  -->
+                </div>
+                <a href="#" class="btn" >Ver todos</a>
+            </section>
+        </main>
+        <footer>
+            <ul>
+                <li>
+                    <a href="#">Home</a>
+                </li>
+                <li>
+                    <a href="#">Catálogos</a>
+                </li>
+                <li>
+                    <a href="#">Blog</a>
+                </li>
+            </ul>
+            <span>Todos direitos reservados</span>
+            
+        </footer>
+
+
+
+        <script>
+            
+        
+
+
+            async function pegarTodosProdutos (){
+                    const resposta = await fetch(
+                        "http://localhost/marcas-api/v2/produtos",
+                        {
+                            method: "GET",
+                        }
+                    )
+
+                    const produtos = await resposta.json()
+
+                    
+
+                   produtos.forEach((produto) => {
+                        renderizar(produto)
+                   })
+            }
+
+            function renderizar(produto) {
+                const article = document.createElement("article")
+                article.classList.add("produto")
+
+                const img = document.createElement("img")
+                img.src = "http://localhost/marcas-api/v2/static-files/" + produto.url_image
+
+                const div = document.createElement("div")
+
+                const spanCategoria = document.createElement("span")
+                spanCategoria.classList.add("categoria")
+                spanCategoria.innerText = produto.categoria
+
+                const spanNome = document.createElement("span")
+                spanNome.classList.add("nome")
+                spanNome.innerText = produto.nome_produto
+
+                const spanDescricao = document.createElement("span")
+                spanDescricao.classList.add("descricao")
+                spanDescricao.innerText = produto.descricao
+
+                const spanPreco = document.createElement("span")
+                spanPreco.classList.add("preco")
+                spanPreco.innerText = `$${produto.preco}`
+
+                const divBtns = document.createElement("div")
+                divBtns.classList.add("btns")
+
+                const aAdicionar = document.createElement("a")
+                aAdicionar.href = "#"
+                aAdicionar.classList.add("btn")
+                aAdicionar.classList.add("primary")
+                aAdicionar.innerText = "Adicionar ao Carrinho"
+
+                const aVer = document.createElement("a")
+                aVer.href = "produto.html?id_produto=" + produto.id_produto
+                aVer.classList.add("btn")
+                aVer.innerText = "Ver Detalhes"
+
+                div.appendChild(spanCategoria)
+                div.appendChild(spanNome)
+                div.appendChild(spanDescricao)
+                div.appendChild(spanPreco)
+
+                divBtns.appendChild(aAdicionar)
+                divBtns.appendChild(aVer)
+
+                article.appendChild(img)
+                article.appendChild(div)
+                article.appendChild(divBtns)
+
+                const listaProdutos = document.getElementById("lista-produtos")
+                listaProdutos.appendChild(article)
+                
+
+
+
+            }
+
+            async function pegarProdutoPorId (idProduto){
+                    const resposta = await fetch(
+                        "http://localhost/marcas-api/v2/produtos/" + idProduto,
+                        {
+                            method: "GET",
+                        }
+                    )
+
+                    const produto = await resposta.json()
+
+                    renderizarBanner(produto)   
+            }
+
+            function renderizarBanner(produto) {
+                const divProductDetails = document.createElement("div")
+                divProductDetails.id = "product-details"
+
+                const h3Categoria = document.createElement("h3")
+                h3Categoria.id = "categoria"
+                h3Categoria.innerText = produto.categoria
+
+                const h1Nome = document.createElement("h1")
+                h1Nome.id = "nome"
+                h1Nome.innerText = produto.nome_produto
+
+                const pDescricao = document.createElement("p")
+                pDescricao.id = "descricao"
+                pDescricao.innerText = produto.descricao
+
+                const pPreco = document.createElement("p")
+                pPreco.id = "preco"
+                pPreco.innerText = produto.preco
+
+                const aAdicionar = document.createElement("a")
+                aAdicionar.href = "#"
+                aAdicionar.classList.add("btn")
+                aAdicionar.classList.add("primary")
+                aAdicionar.innerText = "Adicionar ao Carrinho"
+
+                const aVer = document.createElement("a")
+                aVer.href = "#"
+                aVer.classList.add("btn")
+                aVer.innerText = "Ver Detalhes"
+
+                const divImageWrapper = document.createElement("div")
+                divImageWrapper.id = "product-image-wraper"
+
+                const img = document.createElement("img")
+                img.src = "http://localhost/marcas-api/v2/static-files/" + produto.url_image
+
+                divImageWrapper.appendChild(img)
+
+                divProductDetails.appendChild(h3Categoria)
+                divProductDetails.appendChild(h1Nome)
+                divProductDetails.appendChild(pDescricao)
+                divProductDetails.appendChild(pPreco)
+                divProductDetails.appendChild(aAdicionar)
+                divProductDetails.appendChild(aVer)
+                
+
+                const divBanner = document.getElementById("banner")
+                divBanner.appendChild(divProductDetails)
+                divBanner.appendChild(divImageWrapper)
+            }
+
+            pegarTodosProdutos()
+9
+            let idProduto = Math.floor(Math.random() * 12)
+            idProduto = idProduto === 0 ? 1 : idProduto
+
+            pegarProdutoPorId(idProduto)
+
+        </script>
+    </body>
+</html>
